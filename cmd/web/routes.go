@@ -1,18 +1,23 @@
 package main
 
-import "net/http"
-func (app *application) routes() *http.ServeMux {
-	// Use the http.NewServeMux() function to initialize a new servemux
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", app.home)
-	mux.HandleFunc("/snippet", app.showSnippet)
-	mux.HandleFunc("/snippet/create", app.createSnippet)
+import (
+	"net/http"
 
+	"github.com/bmizerany/pat"
+	"github.com/justinas/alice"
+)
+func (app *application) routes() http.Handler {
+	// Use the http.NewServeMux() function to initialize a new servemux
+	standardMiddleware := alice.New(app.recoverPanic, app.logRequest, secureHeaders)
+	mux := pat.New()
+	mux.Get("/", http.HandlerFunc(app.home))
+	mux.Get("/snippet/create", http.HandlerFunc(app.createSnippetForm))
+	mux.Post("/snippet/create", http.HandlerFunc(app.createSnippet))
+	mux.Get("/snippet/:id", http.HandlerFunc(app.showSnippet))
+	
 	// Create a file server which serves files out of the "./ui/static" directory.
 	fileserver := http.FileServer(http.Dir("./ui/static/"))
+	mux.Get("/static/", http.StripPrefix("/static", fileserver))
 
-	// For matching paths, we strip the "/static" prefix before the request reaches the file server.
-	mux.Handle("/static/", http.StripPrefix("/static", fileserver))
-
-	return mux
+	return standardMiddleware.Then(mux)
 }

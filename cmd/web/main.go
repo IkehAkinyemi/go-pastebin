@@ -3,6 +3,8 @@ package main
 import (
 	"database/sql"
 	"flag"
+	"html/template"
+	"ikehakinyemi/go-pastebin/pkg/models/mysql"
 	"log"
 	"net/http"
 	"os"
@@ -14,6 +16,8 @@ import (
 type application struct {
 	errorLog *log.Logger
 	infoLog  *log.Logger
+	snippets *mysql.SnippetModel
+	templateCache map[string]*template.Template
 }
 
 func openDB(dsn string) (*sql.DB, error) {
@@ -45,9 +49,16 @@ func main() {
 	}
 	defer db.Close()
 
+	templateCache, err := newTemplateCache("./ui/html")
+	if err != nil {
+		errorLog.Fatal(err)
+	}
+
 	app := &application{
 		errorLog: errorLog,
 		infoLog:  infoLog,
+		snippets: &mysql.SnippetModel{DB: db},
+		templateCache: templateCache,
 	}
 
 	// Initialize server struct to support custom error logger
