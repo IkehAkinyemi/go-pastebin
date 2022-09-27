@@ -2,8 +2,8 @@ package main
 
 import (
 	"html/template"
+	"ikehakinyemi/go-pastebin/pkg/forms"
 	"ikehakinyemi/go-pastebin/pkg/models"
-	"net/url"
 	"path/filepath"
 	"time"
 )
@@ -12,8 +12,7 @@ import (
 // any dynamic data that we want to pass to our HTML templates.
 type templateData struct {
 	CurrentYear int
-	FormData url.Values
-	FormErrors map[string]string
+	Form *forms.Form
 	Snippet *models.Snippet
 	Snippets []*models.Snippet
 }
