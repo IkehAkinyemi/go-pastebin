@@ -82,13 +82,13 @@ func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, fmt.Sprintf("/snippet/%d", id), http.StatusSeeOther)
 }
 
-func (app *application) signupUserForm(w http.ResponseWriter, r *http.Request)  {
+func (app *application) signupUserForm(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "signup.page.tmpl", &templateData{
 		Form: forms.New(nil),
 	})
 }
 
-func (app *application) signupUser(w http.ResponseWriter, r *http.Request)  {
+func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
@@ -122,7 +122,7 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request)  {
 	http.Redirect(w, r, "/user/login", http.StatusSeeOther)
 }
 
-func (app *application) loginUser(w http.ResponseWriter, r *http.Request)  {
+func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
@@ -140,16 +140,18 @@ func (app *application) loginUser(w http.ResponseWriter, r *http.Request)  {
 		return
 	}
 
-	app.session.Put(r, "authenticateduserID", id)
+	app.session.Put(r, "authenticatedUserID", id)
 	http.Redirect(w, r, "/snippet/create", http.StatusSeeOther)
 }
 
-func (app *application) loginUserForm(w http.ResponseWriter, r *http.Request)  {
+func (app *application) loginUserForm(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "login.page.tmpl", &templateData{
 		Form: forms.New(nil),
 	})
 }
 
-func (app *application) logoutUser(w http.ResponseWriter, r *http.Request)  {
-	fmt.Fprintln(w, "Logout the user...")
+func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
+	app.session.Remove(r, "authenticatedUserID")
+	app.session.Put(r, "flash", "You've been logged out successfully!")
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

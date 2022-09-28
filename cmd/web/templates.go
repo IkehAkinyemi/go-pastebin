@@ -11,11 +11,13 @@ import (
 // Define a templateData type to act as the holding structure for
 // any dynamic data that we want to pass to our HTML templates.
 type templateData struct {
-	CurrentYear int
-	Flash string
-	Form *forms.Form
-	Snippet *models.Snippet
-	Snippets []*models.Snippet
+	CurrentYear     int
+	Flash           string
+	Form            *forms.Form
+	IsAuthenticated bool
+	Snippet         *models.Snippet
+	Snippets        []*models.Snippet
+	CSRFToken       string
 }
 
 func newTemplateCache(dir string) (map[string]*template.Template, error) {
@@ -53,6 +55,6 @@ func friendlyDataFormat(t time.Time) string {
 	return t.Format("02 Jan 2006 at 15:04")
 }
 
-var functions = template.FuncMap {
+var functions = template.FuncMap{
 	"friendlyDataFormat": friendlyDataFormat,
 }

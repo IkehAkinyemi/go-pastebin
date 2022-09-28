@@ -26,10 +26,10 @@ func New(data url.Values) *Form {
 	}
 }
 
-// Required checks that specific fields in the form 
-// data are present and not blank, fails then add the 
+// Required checks that specific fields in the form
+// data are present and not blank, fails then add the
 // appropriate message to the form errors.
-func (f *Form) Required(fields ...string)  {
+func (f *Form) Required(fields ...string) {
 	for _, field := range fields {
 		value := f.Get(field)
 		if strings.TrimSpace(value) == "" {
@@ -63,8 +63,8 @@ func (f *Form) MatchesPattern(field string, pattern *regexp.Regexp) {
 	}
 }
 
-// MaxLength checks that a specific field in the form 
-// contains a maximum number of characters, fails then add the 
+// MaxLength checks that a specific field in the form
+// contains a maximum number of characters, fails then add the
 // appropriate message to the form errors.
 func (f *Form) MaxLengthChars(field string, d int) {
 	value := f.Get(field)
@@ -76,7 +76,7 @@ func (f *Form) MaxLengthChars(field string, d int) {
 	}
 }
 
-// PermittedValues checks that a specific field in the form 
+// PermittedValues checks that a specific field in the form
 // matches one of a set of specific permitted values, fails
 // then add the appropriate message to the form errors.
 func (f *Form) PermittedValues(field string, opts ...string) {

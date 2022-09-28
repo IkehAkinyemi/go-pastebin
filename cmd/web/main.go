@@ -17,12 +17,12 @@ import (
 
 // application struct hold the application-wide dependencies
 type application struct {
-	errorLog *log.Logger
-	infoLog  *log.Logger
-	session *sessions.Session
-	snippets *mysql.SnippetModel
+	errorLog      *log.Logger
+	infoLog       *log.Logger
+	session       *sessions.Session
+	snippets      *mysql.SnippetModel
 	templateCache map[string]*template.Template
-	users *mysql.UserModel
+	users         *mysql.UserModel
 }
 
 func openDB(dsn string) (*sql.DB, error) {
@@ -62,28 +62,28 @@ func main() {
 	session := sessions.New([]byte(*secret))
 	session.Lifetime = 12 * time.Hour
 
-	tlsConfig := &tls.Config {
+	tlsConfig := &tls.Config{
 		PreferServerCipherSuites: true,
-		CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},
+		CurvePreferences:         []tls.CurveID{tls.X25519, tls.CurveP256},
 	}
 
 	app := &application{
-		errorLog: errorLog,
-		infoLog:  infoLog,
-		session: session,
-		snippets: &mysql.SnippetModel{DB: db},
+		errorLog:      errorLog,
+		infoLog:       infoLog,
+		session:       session,
+		snippets:      &mysql.SnippetModel{DB: db},
 		templateCache: templateCache,
-		users: &mysql.UserModel{DB: db},
+		users:         &mysql.UserModel{DB: db},
 	}
 
 	// Initialize server struct to support custom error logger
 	srv := &http.Server{
-		Addr:     *addr,
-		ErrorLog: errorLog,
-		Handler:  app.routes(),
-		TLSConfig: tlsConfig,
-		IdleTimeout: time.Minute,
-		ReadTimeout: 5 * time.Second,
+		Addr:         *addr,
+		ErrorLog:     errorLog,
+		Handler:      app.routes(),
+		TLSConfig:    tlsConfig,
+		IdleTimeout:  time.Minute,
+		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
 
@@ -91,4 +91,4 @@ func main() {
 	infoLog.Printf("Starting server on %s", *addr)
 	err = srv.ListenAndServeTLS("./tls/cert.pem", "./tls/key.pem")
 	errorLog.Fatal(err)
-} 
+}
