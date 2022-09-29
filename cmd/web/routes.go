@@ -10,7 +10,7 @@ import (
 func (app *application) routes() http.Handler {
 	// Use the http.NewServeMux() function to initialize a new servemux
 	standardMiddleware := alice.New(app.recoverPanic, app.logRequest, secureHeaders)
-	dynamicMiddleware := alice.New(app.session.Enable, noSurf)
+	dynamicMiddleware := alice.New(app.session.Enable, noSurf, app.authenticate)
 
 	mux := pat.New()
 	mux.Get("/", dynamicMiddleware.ThenFunc(app.home))
@@ -23,6 +23,8 @@ func (app *application) routes() http.Handler {
 	mux.Get("/user/login", dynamicMiddleware.ThenFunc(app.loginUserForm))
 	mux.Post("/user/login", dynamicMiddleware.ThenFunc(app.loginUser))
 	mux.Post("/user/logout", dynamicMiddleware.Append(app.requireAuthentication).ThenFunc(app.logoutUser))
+
+	mux.Get("/ping", http.HandlerFunc(ping))
 
 	// Create a file server which serves files out of the "./ui/static" directory.
 	fileserver := http.FileServer(http.Dir("./ui/static/"))

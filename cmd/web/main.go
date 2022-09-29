@@ -25,6 +25,9 @@ type application struct {
 	users         *mysql.UserModel
 }
 
+type contextKey string
+const contextKeyIsAuthenticated = contextKey("isAuthenticated")
+
 func openDB(dsn string) (*sql.DB, error) {
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {

@@ -1,7 +1,10 @@
 package main
 
 import (
+	"context"
+	"errors"
 	"fmt"
+	"ikehakinyemi/go-pastebin/pkg/models"
 	"net/http"
 
 	"github.com/justinas/nosurf"
@@ -58,3 +61,32 @@ func noSurf(next http.Handler) http.Handler {
 
 	return csrfHandler
 }
+
+func (app *application) authenticate(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)  {
+		exist := app.session.Exists(r, "isAuthenticatedUserID")
+		if !exist {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		// Fetch the details of the current user from the database. If no matching 
+		// record is found, or the current user is has been deactivated, remove the 
+		// (invalid) authenticatedUserID value from their session and call the next 
+		// handler in the chain as normal.
+		user, err := app.users.Get(app.session.GetInt(r, "isAuthenticatedUserID"))
+		if err != nil {
+			if errors.Is(err, models.ErrNoRecord) || !user.Active {
+				app.session.Remove(r, "isAuthenticatedUserID")
+				next.ServeHTTP(w, r)
+				return
+			}
+			app.serverError(w, err)
+			return
+		}
+
+		ctx := context.WithValue(r.Context(), contextKeyIsAuthenticated, true)
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
+}
+
