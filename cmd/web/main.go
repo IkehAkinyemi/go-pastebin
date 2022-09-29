@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"flag"
 	"html/template"
+	"ikehakinyemi/go-pastebin/pkg/models"
 	"ikehakinyemi/go-pastebin/pkg/models/mysql"
 	"log"
 	"net/http"
@@ -17,15 +18,24 @@ import (
 
 // application struct hold the application-wide dependencies
 type application struct {
-	errorLog      *log.Logger
-	infoLog       *log.Logger
-	session       *sessions.Session
-	snippets      *mysql.SnippetModel
+	errorLog *log.Logger
+	infoLog  *log.Logger
+	session  *sessions.Session
+	snippets interface {
+		Insert(string, string, string) (int, error)
+		Get(int) (*models.Snippet, error)
+		Latest() ([]*models.Snippet, error)
+	}
 	templateCache map[string]*template.Template
-	users         *mysql.UserModel
+	users         interface {
+		Insert(string, string, string) error
+		Authenticate(string, string) (int, error)
+		Get(int) (*models.User, error)
+	}
 }
 
 type contextKey string
+
 const contextKeyIsAuthenticated = contextKey("isAuthenticated")
 
 func openDB(dsn string) (*sql.DB, error) {
