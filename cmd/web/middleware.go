@@ -64,7 +64,7 @@ func noSurf(next http.Handler) http.Handler {
 
 func (app *application) authenticate(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)  {
-		exist := app.session.Exists(r, "isAuthenticatedUserID")
+		exist := app.session.Exists(r, "authenticatedUserID")
 		if !exist {
 			next.ServeHTTP(w, r)
 			return
@@ -74,10 +74,10 @@ func (app *application) authenticate(next http.Handler) http.Handler {
 		// record is found, or the current user is has been deactivated, remove the 
 		// (invalid) authenticatedUserID value from their session and call the next 
 		// handler in the chain as normal.
-		user, err := app.users.Get(app.session.GetInt(r, "isAuthenticatedUserID"))
+		user, err := app.users.Get(app.session.GetInt(r, "authenticatedUserID"))
 		if err != nil {
 			if errors.Is(err, models.ErrNoRecord) || !user.Active {
-				app.session.Remove(r, "isAuthenticatedUserID")
+				app.session.Remove(r, "authenticatedUserID")
 				next.ServeHTTP(w, r)
 				return
 			}
