@@ -4,9 +4,7 @@
 
 # Snippetbox
 
-This application was developed by following the [Let's Go book by Alex Edwards](https://lets-go.alexedwards.net/).
-
-It's a full-stack Go web application called Snippetbox that lets people paste and share snippets of text — a bit like GitHub's Gists or Pastebin.
+This is a full-stack Go web application called Snippetbox that lets people paste and share snippets of text — a bit like GitHub's Gists or Pastebin.
 
 ## Features
 
@@ -27,7 +25,6 @@ Software requirements:
 
 - This project supports Go modules. Go 1.13+ is required.
 - MySQL
-- make
 
 To start the local web server with HTTPS on port 4000:
 
@@ -35,13 +32,10 @@ To start the local web server with HTTPS on port 4000:
 $ git clone https://github.com/IkehAkinyemi/go-pastebin
 $ cd go-pastebin
 
-# Generate TLS key and cert
-$ make cert
+# Generate TLS key and cert, and then run
 
-$ make dev
+$ go run ./cmd/web
 ```
-
-To run the tests, run `make test`.
 
 ## Dependencies
 

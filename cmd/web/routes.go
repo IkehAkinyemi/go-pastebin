@@ -26,6 +26,8 @@ func (app *application) routes() http.Handler {
 
 	mux.Get("/ping", http.HandlerFunc(ping))
 
+	mux.Get("/about", dynamicMiddleware.ThenFunc(app.about))
+
 	// Create a file server which serves files out of the "./ui/static" directory.
 	fileserver := http.FileServer(http.Dir("./ui/static/"))
 	mux.Get("/static/", http.StripPrefix("/static", fileserver))

@@ -1,0 +1,41 @@
+{{template "base" .}} {{define "title"}}About{{end}} {{define "main"}}
+<div>
+  <h2>About</h2>
+  <p>
+    This is a full-stack Go web application called Snippetbox that lets people
+    paste and share snippets of text — a bit like GitHub's Gists or Pastebin.
+  </p>
+  <h4>Features</h4>
+  <ul>
+    <li>Save and view snippets.</li>
+    <li>Middleware.</li>
+    <li>RESTful routing.</li>
+    <li>SSL/TLS web server using HTTP 2.0.</li>
+    <li>User authentication. User can signup and login.</li>
+    <li>Leveled logging.</li>
+    <li>Data persistence using MySQL database.</li>
+    <li>Dynamic HTML using Go templates.</li>
+    <li>Session management.</li>
+    <li>Web security.</li>
+  </ul>
+  <h4>Dependencies</h4>
+  <p>
+    This project is all based on the standard library. You don't need a
+    framework to build web applications in Go. Go's standard library contains
+    almost all the tools that you need, even for a moderately complex
+    application. The book teaches you to build web applications using the
+    standard library (rather than using a specific framework like Echo, Chi or
+    Gin). A few small external packages are used where it makes sense for
+    security reasons and to reduce complexity.
+  </p>
+  <h4>Things I Learned</h4>
+  <ul>
+    <li>Go for web development using just the standard library.</li>
+    <li>How to start small and iteratively improve the codebase by refactoring.</li>
+    <li>How to structure a project and create testable packages.</li>
+    <li>How to create **maintainable** web applications.</li>
+  <li>Basic web security.</li>
+  <li>How HTTPS works.</li>
+  </ul>
+</div>
+{{end}}

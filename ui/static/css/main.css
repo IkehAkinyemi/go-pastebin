@@ -51,6 +51,11 @@ h2 {
     top: -9px;
 }
 
+h4 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
 a {
     color: #62CB31;
     text-decoration: none;
