@@ -22,9 +22,9 @@ type application struct {
 	infoLog  *log.Logger
 	session  *sessions.Session
 	snippets interface {
-		Insert(string, string, string) (int, error)
+		Insert(string, string, string, string) (int, error)
 		Get(int) (*models.Snippet, error)
-		Latest() ([]*models.Snippet, error)
+		Latest(string) ([]*models.Snippet, error)
 	}
 	templateCache map[string]*template.Template
 	users         interface {

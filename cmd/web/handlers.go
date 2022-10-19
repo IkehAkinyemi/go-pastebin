@@ -13,7 +13,21 @@ import (
 // Define a home handler function which writes a byte slice containing
 // "Hello from Snippetbox" as the response body.
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
-	s, err := app.snippets.Latest()
+	userID := app.session.GetInt(r, "authenticatedUserID")
+	if userID == 0 {
+		app.render(w, r, "home.page.tmpl", &templateData{
+			Snippets: nil,
+		})
+		return
+	}
+
+	user, err := app.users.Get(userID)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	s, err := app.snippets.Latest(user.Email)
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -71,7 +85,14 @@ func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id, err := app.snippets.Insert(form.Get("title"), form.Get("content"), form.Get("expires"))
+	userID := app.session.GetInt(r, "authenticatedUserID")
+	user, err := app.users.Get(userID)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	id, err := app.snippets.Insert(user.Email, form.Get("title"), form.Get("content"), form.Get("expires"))
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -195,9 +216,10 @@ func (app *application) ChangePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	form := forms.New(r.PostForm)
+	fmt.Println(form.Get("current-password"))
 	form.Required("confirm-password", "new-password", "current-password")
 	form.MinLengthChars("current-password", 10)
-	form.MatchPasswords("confirm-password", "new-password")
+	form.MatchPasswords("new-password", "confirm-password")
 	if !form.Valid() {
 		app.render(w, r, "password.page.tmpl", &templateData{
 			Form: form,

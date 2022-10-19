@@ -85,7 +85,7 @@ func (f *Form) MatchPasswords(pw1 string, pw2 string) {
 	}
 
 	if field2 != field1 {
-		f.Errors.Add(field2, "Passwords do not match")
+		f.Errors.Add(pw2, "Passwords do not match")
 	}
 }
 

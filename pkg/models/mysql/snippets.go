@@ -12,12 +12,12 @@ type SnippetModel struct {
 }
 
 // Insert will insert a new snippet into the database.
-func (m *SnippetModel) Insert(title, content, expires string) (int, error) {
+func (m *SnippetModel) Insert(userEmail, title, content, expires string) (int, error) {
 	// SQL statement
-	stmt := `INSERT INTO snippets (title, content, created, expires)
-VALUES(?, ?, UTC_TIMESTAMP(), DATE_ADD(UTC_TIMESTAMP(), INTERVAL ? DAY))`
+	stmt := `INSERT INTO snippets (title, content, created, expires, owner_email)
+VALUES(?, ?, UTC_TIMESTAMP(), DATE_ADD(UTC_TIMESTAMP(), INTERVAL ? DAY), ?)`
 	// Use Exec() to execute statement
-	result, err := m.DB.Exec(stmt, title, content, expires)
+	result, err := m.DB.Exec(stmt, title, content, expires, userEmail)
 	if err != nil {
 		return 0, err
 	}
@@ -50,12 +50,11 @@ func (m *SnippetModel) Get(id int) (*models.Snippet, error) {
 }
 
 // Latest will return the 10 most recently created snippets.
-func (m *SnippetModel) Latest() ([]*models.Snippet, error) {
+func (m *SnippetModel) Latest(userEmail string) ([]*models.Snippet, error) {
 	// SQL statement.
 	stmt := `SELECT id, title, content, created, expires FROM snippets 
-	WHERE expires > UTC_TIMESTAMP() ORDER BY created DESC LIMIT 10`
-
-	rows, err := m.DB.Query(stmt)
+	WHERE expires > UTC_TIMESTAMP() AND owner_email = ? ORDER BY created DESC LIMIT 10`
+	rows, err := m.DB.Query(stmt, userEmail)
 	if err != nil {
 		return nil, err
 	}

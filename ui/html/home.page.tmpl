@@ -1,20 +1,23 @@
-{{template "base" .}} {{define "title"}}Home{{end}} {{define "main"}}
+{{template "base" .}} {{define "title"}}Home{{end}} 
+{{define "main"}}
 <h2>Latest Snippets</h2>
-{{if .Snippets}}
 <table>
   <tr>
     <th>Title</th>
     <th>Created</th>
     <th>ID</th>
   </tr>
-  {{range .Snippets}}
+  {{if .Snippets}}
+    {{range .Snippets}}
   <tr>
     <td><a href="/snippet/{{.ID}}">{{.Title}}</a></td>
     <td>{{friendlyDataFormat .Created}}</td>
     <td>#{{.ID}}</td>
   </tr>
-  {{end}} {{else}}
-  <p>There's nothing to see here... yet!</p>
+  {{end}} 
+  {{else}}
+  <p>There's nothing to see here... yet! Signup or login to create snippets</p>
+  <br>
   {{end}}
 </table>
 {{end}}
