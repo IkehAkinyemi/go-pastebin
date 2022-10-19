@@ -1,0 +1,29 @@
+{{template "base" .}}
+
+{{define "title"}}Profile{{end}}
+
+{{define "main"}}
+  <div>
+  <h2>User Profile</h2>
+  <table>
+  {{with .User}}
+  <tr>
+    <td>Name</td>
+    <td>{{.Name}}</td>
+  </tr>
+  <tr>
+    <td>Email</td>
+    <td>{{.Email}}</td>
+  </tr>
+  <tr>
+    <td>Joined</td>
+    <td>{{.Created | friendlyDataFormat}}</td>
+  </tr>
+  <tr>
+    <td>Password</td>
+    <td><a href='/user/change-password'>Change password</a></td>
+  </tr>
+  {{end}}
+  </table>
+  </div>
+{{end}}

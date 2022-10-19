@@ -18,6 +18,7 @@ type templateData struct {
 	Snippet         *models.Snippet
 	Snippets        []*models.Snippet
 	CSRFToken       string
+	User            *models.User
 }
 
 func newTemplateCache(dir string) (map[string]*template.Template, error) {

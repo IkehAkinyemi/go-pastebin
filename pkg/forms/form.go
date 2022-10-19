@@ -76,6 +76,19 @@ func (f *Form) MaxLengthChars(field string, d int) {
 	}
 }
 
+func (f *Form) MatchPasswords(pw1 string, pw2 string) {
+	field1 := f.Get(pw1)
+	field2 := f.Get(pw2)
+
+	if strings.TrimSpace(field1) == "" && strings.TrimSpace(field2) == "" {
+		return
+	}
+
+	if field2 != field1 {
+		f.Errors.Add(field2, "Passwords do not match")
+	}
+}
+
 // PermittedValues checks that a specific field in the form
 // matches one of a set of specific permitted values, fails
 // then add the appropriate message to the form errors.

@@ -31,7 +31,9 @@ type application struct {
 		Insert(string, string, string) error
 		Authenticate(string, string) (int, error)
 		Get(int) (*models.User, error)
+		ChangePassword(id int, currentPassword, newPassword string) error
 	}
+	debug bool
 }
 
 type contextKey string
@@ -54,6 +56,7 @@ func main() {
 	addr := flag.String("addr", ":4000", "HTTP network address")
 	dsn := flag.String("dsn", "dev:Akinyemi1234@@/snippetbox?parseTime=true", "MySQL data source name")
 	secret := flag.String("secret", "C2VcQyPozmr2D6YvRBsbn6ZwJ6Lpddov", "Secret Key")
+	debug := flag.Bool("debug", false, "Enable debug mode")
 	flag.Parse()
 
 	// Create INFO and ERROR loggers
@@ -87,6 +90,7 @@ func main() {
 		snippets:      &mysql.SnippetModel{DB: db},
 		templateCache: templateCache,
 		users:         &mysql.UserModel{DB: db},
+		debug: *debug,
 	}
 
 	// Initialize server struct to support custom error logger
