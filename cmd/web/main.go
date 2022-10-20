@@ -16,7 +16,7 @@ import (
 	"github.com/golangcollege/sessions"
 )
 
-// application struct hold the application-wide dependencies
+// application struct to hold the application-wide dependencies
 type application struct {
 	errorLog *log.Logger
 	infoLog  *log.Logger
