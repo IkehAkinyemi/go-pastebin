@@ -33,8 +33,9 @@ $ git clone https://github.com/IkehAkinyemi/go-pastebin
 $ cd go-pastebin
 
 # Generate TLS key and cert, and then run
-go run /usr/local/go/src/crypto/tls/generate_cert.go --rsa-bits=2048 --host=localhost
-$ go run ./cmd/web
+$ make tls
+
+$ make server
 ```
 
 ## Dependencies
