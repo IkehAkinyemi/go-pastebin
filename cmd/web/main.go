@@ -54,7 +54,7 @@ func openDB(dsn string) (*sql.DB, error) {
 func main() {
 	// configuration
 	addr := flag.String("addr", ":4000", "HTTP network address")
-	dsn := flag.String("dsn", "dev:Akinyemi1234@@/snippetbox?parseTime=true", "MySQL data source name")
+	dsn := flag.String("dsn", "root:Akinyemi1234@@/snippetbox?parseTime=true", "MySQL data source name")
 	secret := flag.String("secret", "C2VcQyPozmr2D6YvRBsbn6ZwJ6Lpddov", "Secret Key")
 	debug := flag.Bool("debug", false, "Enable debug mode")
 	flag.Parse()
