@@ -1,3 +1,4 @@
+
 <p align="center">
   <img src="docs/img/hero.png" alt="Snippetbox" width="700"/>
 </p>
